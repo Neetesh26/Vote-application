@@ -1,12 +1,36 @@
-{
-    "name":"Narendra modi",
-    "party":"BJP",
-    "age":25,
-    "votes":[
-        {
-            "user":"4656sd768g54g5d4sxdv435__ID",
-            "votedAt": "26/01/2022 1:20"
-        }
-    ],
-    "voteCount":2
-}
+[
+    {
+        "name":"Narendra modi",
+        "party":"BJP",
+        "age":25,
+        "votes":[
+            {
+                "user":"4656sd768g54g5d4sxdv435__ID",
+                "votedAt": "26/01/2022 1:20"
+            }
+        ],
+        "voteCount":2
+    },
+    {
+        "name": "Alice Johnson",
+        "age": 28,
+        "mobile": "5555555555",
+        "email": "alice.johnson@example.com",
+        "address": "789 Oak St, Sometown, USA",
+        "aadharCardnumber": 555555555555,
+        "password": "password789",
+        "role": "voter",
+        "isvoted": false
+    },
+    {
+        "name": "John Doe",
+        "age": 30,
+        "mobile": "1234567890",
+        "email": "john.doe@example.com",
+        "address": "123 Main St, Anytown, USA",
+        "aadharCardnumber": 123456789012,
+        "password": "password123",
+        "role": "voter",
+        "isvoted": false
+    }
+]
