@@ -16,11 +16,16 @@ next()
 }
 app.use(logrequest)
 
+// const { jwtMiddleware } = require("./jwt");
+
+
 //require page user route
 const userRoutes = require('./Routes/userRoutes')
+const candidateRoutes = require('./Routes/candidateRoutes')
 
 // middleware use user route
 app.use('/user', userRoutes)
+app.use('/candidate', candidateRoutes)
 
 app.listen(PORT, () => {
   console.log("Server listening on port : ", PORT);
