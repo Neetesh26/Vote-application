@@ -40,10 +40,10 @@ const checkAdminRole = async (userId) => {
   return false;
 };
 // Apply JWT middleware to protect the route
-router.use(jwtMiddleware);
+// router.use(jwtMiddleware);
 
 //post route  to add candidate
-router.post("/", async function (req, res) {
+router.post("/",jwtMiddleware, async function (req, res) {
   try {
      // Debugging statement
     // console.log(`req.user: ${JSON.stringify(req.user)}`);   
@@ -67,8 +67,8 @@ router.post("/", async function (req, res) {
   }
 });
 
-//update password by user--->
-router.put("/:candidateID", async (req, res) => {
+//update candidate by user--->
+router.put("/:candidateID",jwtMiddleware, async (req, res) => {
   try {
     console.log(`req.user: ${JSON.stringify(req.user)}`);  
     if (!(await checkAdminRole(req.user)))
@@ -115,4 +115,63 @@ try {
     res.status(500).json({error:"internal server error"})
 }
 }) 
+
+
+//vote route
+router.post('/vote/:candidateID' ,jwtMiddleware , async (req,res)=>{
+    //user id ,candidate id
+    const userID = req.user
+    const candidateIDData = req.params.candidateID
+  try {
+     const candidateID = await candidate.findById(candidateIDData)
+    if(!candidateID){
+      return res.status(400).json({message:" candidate not found"})
+    }
+
+    const user  = await User.findById(userID)
+
+    if(!user){
+      return res.status(400).json({message:" user not found"})
+    }
+    if(user.role === "admin"){
+       res.status(400).json({message:" admin can not give vote"})
+    }
+    if(user.isvoted){
+      res.status(400).json({message:" you have already voted"})
+    }
+
+    candidateID.votes.push({ user: userID });
+    candidateID.voteCount++;
+    await candidateID.save();
+
+    user.isvoted = true;
+    await user.save();
+
+    res.status(200).json({message:"vote recorded successfully"})
+
+  } catch (error) {
+    console.log(error);
+    
+    res.status(400).json({message:" internal server error"})
+  }
+})
+
+
+//counting vote route
+router.get('/vote/count',async (req,res)=>{
+
+  try {
+      const candidatedata = await candidate.find().sort({voteCount:'desc'})
+      const voteRecord = candidatedata.map((data)=>{
+        return { partyName : data.party , voteCount: data.voteCount}
+      })
+
+      res.status(200).json(voteRecord)
+  
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({message:" internal server error"})
+  }
+})
+
   module.exports = router;
